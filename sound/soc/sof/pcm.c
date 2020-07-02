@@ -319,6 +319,8 @@ static int sof_pcm_trigger(struct snd_soc_component *component,
 	bool ipc_first = false;
 	int ret;
 
+
+
 	/* nothing to do for BE */
 	if (rtd->dai_link->no_pcm)
 		return 0;
@@ -326,6 +328,8 @@ static int sof_pcm_trigger(struct snd_soc_component *component,
 	spcm = snd_sof_find_spcm_dai(component, rtd);
 	if (!spcm)
 		return -EINVAL;
+
+	printk("RAJWA: in sof_pcm_trigger, we got cmd %d", cmd);
 
 	dev_dbg(component->dev, "pcm: trigger stream %d dir %d cmd %d\n",
 		spcm->pcm.pcm_id, substream->stream, cmd);
