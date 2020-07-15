@@ -370,7 +370,6 @@ static int sof_pcm_trigger(struct snd_soc_component *component,
 			 * remained enabled in D0ix.
 			 */
 			spcm->stream[substream->stream].suspend_ignored = false;
-			snd_sof_pcm_platform_trigger(sdev, substream, cmd);
 			return 0;
 		}
 		stream.hdr.cmd |= SOF_IPC_STREAM_TRIG_START;
@@ -384,7 +383,12 @@ static int sof_pcm_trigger(struct snd_soc_component *component,
 			 * and mark the flag to ignore the upcoming DAPM
 			 * PM events.
 			 */
-			snd_sof_pcm_platform_trigger(sdev, substream, cmd);
+			ret = snd_sof_pcm_platform_trigger(sdev, substream, cmd);
+			if (ret < 0) {
+				dev_warn(sdev->dev,
+					 "error %d in %s: failed to trigger KWD stream\n",
+					 ret, __func__);
+			}
 			spcm->stream[substream->stream].suspend_ignored = true;
 			return 0;
 		}
